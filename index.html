@@ -1,34 +1,54 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Genius Effect Menu</title>
-  <link rel="stylesheet" href="https://public.codepenassets.com/css/normalize-5.0.0.min.css">
-<link rel="stylesheet" href="./style.css">
-
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Pure CSS Mac Dock Effect</title>
+	<link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
-<!-- partial:index.partial.html -->
-<main>
-	<h1 class="title">Mac Dock “Genius” Magnification</h1>
-	<p class="hint">Move your pointer over the bottom dock. Tweak tokens in <code>:root</code> to adjust size, spread, and lift.</p>
-</main>
+	<div class="container">
+		<h1>Pure CSS Mac Dock Effect</h1>
+		<p class="subtitle">Hover over the dock items to see the magic!</p>
 
-<div class="dock-wrap">
-	<div class="dock" id="dock" tabindex="0" aria-label="Dock" role="list">
-		<!-- Use data-label for the floating labels; --h sets each tile hue -->
-		<button class="dock-item" data-label="Mail" style="--h: 210" aria-label="Mail" role="listitem">✉️</button>
-		<button class="dock-item" data-label="Files" style="--h: 260" aria-label="Files" role="listitem">📁</button>
-		<button class="dock-item" data-label="Photos" style="--h: 30" aria-label="Photos" role="listitem">🖼️</button>
-		<button class="dock-item" data-label="Music" style="--h: 340" aria-label="Music" role="listitem">🎵</button>
-		<button class="dock-item" data-label="TV" style="--h: 10" aria-label="TV" role="listitem">🎬</button>
-		<button class="dock-item" data-label="Browser" style="--h: 190" aria-label="Browser" role="listitem">🌐</button>
-		<button class="dock-item" data-label="Games" style="--h: 280" aria-label="Games" role="listitem">🎮</button>
-		<button class="dock-item" data-label="Settings" style="--h: 150" aria-label="Settings" role="listitem">⚙️</button>
+		<div class="dock-container">
+			<div class="dock">
+				<div class="dock-item" data-label="Mail">
+					<div class="icon">✉️</div>
+				</div>
+
+				<div class="dock-item" data-label="Files">
+					<div class="icon">📁</div>
+				</div>
+
+				<div class="dock-item" data-label="Photos">
+					<div class="icon">🖼️</div>
+				</div>
+
+				<div class="dock-item" data-label="Music">
+					<div class="icon">🎵</div>
+				</div>
+
+				<div class="dock-item" data-label="TV">
+					<div class="icon">🎬</div>
+				</div>
+
+				<div class="dock-item" data-label="Browser">
+					<div class="icon">🌐</div>
+				</div>
+
+				<div class="dock-item" data-label="Games">
+					<div class="icon">🎮</div>
+				</div>
+
+				<div class="dock-item" data-label="Settings">
+					<div class="icon">⚙️</div>
+				</div>
+			</div>
+		</div>
 	</div>
-</div>
-<!-- partial -->
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/4.1.12/lib.min.js'></script><script  src="./script.js"></script>
-
 </body>
+
 </html>
