@@ -16,34 +16,58 @@
 					<div class="icon">
 						<img src="./assets/firefox.png" alt="Firefox" width="40" height="40">
 					</div>
+					<div class="active-dot"></div>
 				</div>
 
 				<div class="dock-item" data-label="ChatGPT">
 					<div class="icon">
 						<img src="./assets/chatgpt.png" alt="ChatGPT" width="40" height="40">
 					</div>
+					<div class="active-dot"></div>
 				</div>
 
 				<div class="dock-item" data-label="System Preferences">
 					<div class="icon">
 						<img src="./assets/system-preferences.png" alt="System Preferences" width="40" height="40">
 					</div>
+					<div class="active-dot"></div>
 				</div>
 
 				<div class="dock-item" data-label="Trello">
 					<div class="icon">
 						<img src="./assets/trello.png" alt="Trello" width="40" height="40">
 					</div>
+					<div class="active-dot"></div>
 				</div>
 
 				<div class="dock-item" data-label="VS Code">
 					<div class="icon">
 						<img src="./assets/vscode.png" alt="VS Code" width="40" height="40">
 					</div>
+					<div class="active-dot"></div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<script>
+		// Handle active states for dock items
+		document.addEventListener('DOMContentLoaded', function () {
+			const dockItems = document.querySelectorAll('.dock-item');
+
+			dockItems.forEach(item => {
+				item.addEventListener('click', function () {
+					// Remove active class from all items
+					dockItems.forEach(otherItem => {
+						otherItem.classList.remove('active');
+					});
+
+					// Add active class to clicked item (permanent until another is clicked)
+					this.classList.add('active');
+				});
+			});
+		});
+	</script>
 </body>
 
 </html>

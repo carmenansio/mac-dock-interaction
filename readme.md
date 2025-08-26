@@ -23,7 +23,9 @@ A Mac-style dock with 5 icon items that features:
 | Idle | Hover In | Neighbor 3 | Scales 1.04x, lifts -0.2rem, 9ms delay |
 | Idle | Hover In | Neighbor 4 | Scales 1.02x, lifts -0.1rem, 12ms delay |
 | Hovered | Hover Out | Idle | Restores to original state |
-| Hovered | Active | Pressed | Scales 1.18x, lifts -0.9rem, faster timing |
+| Hovered | Click | Active | Scales 1.05x, lifts -0.5rem, shows indicator dot |
+| Active | Timeout | Idle | Auto-resets after 2 seconds |
+| Active | Click Other | New Active | Switches active state to new item |
 
 ### 3. Motion Spec
 
@@ -41,6 +43,10 @@ A Mac-style dock with 5 icon items that features:
 | Transform (Label) | translateY(1.5rem) → translateY(0) | 400ms | 0ms | cubic-bezier(0.34,1.56,0.64,1) | Label lift |
 | Transform (Label) | rotateX(-15°) → rotateX(0°) | 400ms | 0ms | cubic-bezier(0.34,1.56,0.64,1) | Label rotation |
 | Box Shadow | Default → Enhanced | 400ms | 0ms | cubic-bezier(0.34,1.56,0.64,1) | Shadow depth |
+| Transform (Active) | scale(1) → scale(1.05) | 200ms | 0ms | cubic-bezier(0.25,0.46,0.45,0.94) | Click activation |
+| Transform (Active) | translateY(0) → translateY(-0.5rem) | 200ms | 0ms | cubic-bezier(0.25,0.46,0.45,0.94) | Active lift |
+| Transform (Active) | rotateX(0°) → rotateX(2°) | 200ms | 0ms | cubic-bezier(0.25,0.46,0.45,0.94) | Active rotation |
+| Opacity (Indicator) | 0 → 1 | 200ms | 0ms | cubic-bezier(0.25,0.46,0.45,0.94) | Dot reveal |
 
 ### 4. Component Structure
 
@@ -52,19 +58,24 @@ Dock Container
 │   └── Dock Border
 ├── Dock Item 1 (Firefox)
 │   ├── Icon Container
-│   └── Label (::after)
+│   ├── Label (::after)
+│   └── Active Indicator (::after when active)
 ├── Dock Item 2 (ChatGPT)
 │   ├── Icon Container
-│   └── Label (::after)
+│   ├── Label (::after)
+│   └── Active Indicator (::after when active)
 ├── Dock Item 3 (System Preferences)
 │   ├── Icon Container
-│   └── Label (::after)
+│   ├── Label (::after)
+│   └── Active Indicator (::after when active)
 ├── Dock Item 4 (Trello)
 │   ├── Icon Container
-│   └── Label (::after)
+│   ├── Label (::after)
+│   └── Active Indicator (::after when active)
 └── Dock Item 5 (VS Code)
     ├── Icon Container
-    └── Label (::after)
+    ├── Label (::after)
+    └── Active Indicator (::after when active)
 ```
 
 #### Naming Convention
@@ -89,8 +100,10 @@ Dock Container
 #### Interaction Presets
 - **On Hover**: Primary item transformation
 - **While Hovering**: Neighboring item cascade
-- **On Tap**: Active state (pressed)
-- **After Delay**: Staggered neighbor animations
+- **On Click**: Active state activation
+- **Active State**: Indicator dot + enhanced styling
+- **Active State**: Permanent until another item is clicked
+- **State Switching**: Click different item to change active state
 
 #### Animation Options
 - **Duration**: 400ms (primary), 250-400ms (staggered)
@@ -112,8 +125,12 @@ Dock Container
 | --scale-neighbor-2 | Second neighbor scale | 1.08 | ± 0.05 tolerance |
 | --scale-neighbor-3 | Third neighbor scale | 1.04 | ± 0.05 tolerance |
 | --scale-neighbor-4 | Fourth neighbor scale | 1.02 | ± 0.05 tolerance |
+| --scale-active | Active scale | 1.05 | ± 0.05 tolerance |
 | --lift-hover | Hover lift | -1.4rem | ± 0.1rem tolerance |
+| --lift-active | Active lift | -0.5rem | ± 0.1rem tolerance |
 | --rotation-hover | Hover rotation | 6deg | ± 1deg tolerance |
+| --rotation-active | Active rotation | 2deg | ± 1deg tolerance |
+| --duration-active | Active state timing | 600ms | ± 50ms tolerance |
 | --blur-backdrop | Dock backdrop | 20px | ± 2px tolerance |
 | --radius-dock | Dock corners | 2rem | ± 0.1rem tolerance |
 | --radius-item | Item corners | 1rem | ± 0.05rem tolerance |
@@ -178,6 +195,8 @@ Dock Container
 - [ ] New hover cancels previous animation
 - [ ] Smooth transition between different hover targets
 - [ ] No animation conflicts or glitches
+- [ ] Click activates new item smoothly
+- [ ] Active state transitions properly between items
 
 ### 10. Handoff Pack
 
@@ -283,20 +302,29 @@ Dock Container
     "easing": {
       "bounce": [0.34, 1.56, 0.64, 1]
     },
-    "scale": {
-      "hover": 1.1,
-      "neighbor1": 1.15,
-      "neighbor2": 1.08,
-      "neighbor3": 1.04,
-      "neighbor4": 1.02
-    },
-    "lift": {
-      "hover": -1.4,
-      "neighbor1": -0.7,
-      "neighbor2": -0.4,
-      "neighbor3": -0.2,
-      "neighbor4": -0.1
-    }
+      "scale": {
+    "hover": 1.1,
+    "neighbor1": 1.15,
+    "neighbor2": 1.08,
+    "neighbor3": 1.04,
+    "neighbor4": 1.02,
+    "active": 1.05
+  },
+  "lift": {
+    "hover": -1.4,
+    "neighbor1": -0.7,
+    "neighbor2": -0.4,
+    "neighbor3": -0.2,
+    "neighbor4": -0.1,
+    "active": -0.5
+  },
+  "rotation": {
+    "hover": 6,
+    "active": 2
+  },
+  "duration": {
+    "active": 200
+  }
   },
   "a11y": {
     "reduced_motion_variant": true,
@@ -365,17 +393,24 @@ tokens:
   easing:
     bounce: [0.34, 1.56, 0.64, 1]
   scale:
-    hover: 1.1
-    neighbor1: 1.15
-    neighbor2: 1.08
-    neighbor3: 1.04
-    neighbor4: 1.02
-  lift:
-    hover: -1.4
-    neighbor1: -0.7
-    neighbor2: -0.4
-    neighbor3: -0.2
-    neighbor4: -0.1
+  hover: 1.1
+  neighbor1: 1.15
+  neighbor2: 1.08
+  neighbor3: 1.04
+  neighbor4: 1.02
+  active: 1.05
+lift:
+  hover: -1.4
+  neighbor1: -0.7
+  neighbor2: -0.4
+  neighbor3: -0.2
+  neighbor4: -0.1
+  active: -0.5
+rotation:
+  hover: 6
+  active: 2
+duration:
+  active: 200
 
 a11y:
   reduced_motion_variant: true
