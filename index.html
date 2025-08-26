@@ -12,40 +12,42 @@
 	<div class="container">
 		<div class="dock-container">
 			<div class="dock">
-				<div class="dock-item" data-label="Firefox">
+				<div class="dock-item" data-label="Firefox" data-index="0">
 					<div class="icon">
 						<img src="./assets/firefox.png" alt="Firefox" width="40" height="40">
 					</div>
-					<div class="active-dot"></div>
 				</div>
 
-				<div class="dock-item" data-label="ChatGPT">
+				<div class="dock-item" data-label="ChatGPT" data-index="1">
 					<div class="icon">
 						<img src="./assets/chatgpt.png" alt="ChatGPT" width="40" height="40">
 					</div>
-					<div class="active-dot"></div>
 				</div>
 
-				<div class="dock-item" data-label="System Preferences">
+				<div class="dock-item" data-label="System Preferences" data-index="2">
 					<div class="icon">
 						<img src="./assets/system-preferences.png" alt="System Preferences" width="40" height="40">
 					</div>
-					<div class="active-dot"></div>
 				</div>
 
-				<div class="dock-item" data-label="Trello">
+				<div class="dock-item" data-label="Trello" data-index="3">
 					<div class="icon">
 						<img src="./assets/trello.png" alt="Trello" width="40" height="40">
 					</div>
-					<div class="active-dot"></div>
 				</div>
 
-				<div class="dock-item" data-label="VS Code">
+				<div class="dock-item" data-label="VS Code" data-index="4">
 					<div class="icon">
 						<img src="./assets/vscode.png" alt="VS Code" width="40" height="40">
 					</div>
-					<div class="active-dot"></div>
 				</div>
+
+				<!-- Active dots positioned outside dock items -->
+				<div class="active-dot" data-for="0"></div>
+				<div class="active-dot" data-for="1"></div>
+				<div class="active-dot" data-for="2"></div>
+				<div class="active-dot" data-for="3"></div>
+				<div class="active-dot" data-for="4"></div>
 			</div>
 		</div>
 	</div>
@@ -54,16 +56,25 @@
 		// Handle active states for dock items
 		document.addEventListener('DOMContentLoaded', function () {
 			const dockItems = document.querySelectorAll('.dock-item');
+			const activeDots = document.querySelectorAll('.active-dot');
 
 			dockItems.forEach(item => {
 				item.addEventListener('click', function () {
-					// Remove active class from all items
+					// Remove active class from all items and dots
 					dockItems.forEach(otherItem => {
 						otherItem.classList.remove('active');
 					});
+					activeDots.forEach(dot => {
+						dot.classList.remove('active');
+					});
 
-					// Add active class to clicked item (permanent until another is clicked)
+					// Add active class to clicked item and corresponding dot
 					this.classList.add('active');
+					const index = this.getAttribute('data-index');
+					const correspondingDot = document.querySelector(`.active-dot[data-for="${index}"]`);
+					if (correspondingDot) {
+						correspondingDot.classList.add('active');
+					}
 				});
 			});
 		});
