@@ -74,7 +74,6 @@ body {
   width: 4rem;
   height: 4rem;
   border-radius: 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -83,21 +82,13 @@ body {
   transform-origin: bottom center;
   box-shadow: 
     0 8px 16px rgba(0, 0, 0, 0.2),
-    0 4px 8px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: visible;
   /* Enhanced tweening properties */
   will-change: transform, box-shadow, filter;
   backface-visibility: hidden;
   perspective: 1000px;
 }
-
-/* Individual dock item colors */
-.dock-item:nth-child(1) { background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); } /* Firefox - Orange */
-.dock-item:nth-child(2) { background: linear-gradient(135deg, #10a37f 0%, #1a7f64 100%); } /* ChatGPT - Green */
-.dock-item:nth-child(3) { background: linear-gradient(135deg, #007aff 0%, #5856d6 100%); } /* System Preferences - Blue */
-.dock-item:nth-child(4) { background: linear-gradient(135deg, #0079bf 0%, #0052cc 100%); } /* Trello - Blue */
-.dock-item:nth-child(5) { background: linear-gradient(135deg, #007acc 0%, #1e1e1e 100%); } /* VS Code - Blue/Black */
 
 /* Icon styling */
 .icon {
@@ -130,7 +121,6 @@ body {
 
 .dock-item:hover .icon img {
   transform: scale(1.1) rotateY(3deg);
-  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.8));
 }
 
 /* Enhanced neighboring items scale effect with sophisticated staggered tweening */
@@ -191,19 +181,17 @@ body {
   transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Add subtle shadow and glow effects to neighboring items for enhanced depth */
+/* Add subtle shadow effects to neighboring items for enhanced depth */
 .dock-item:hover + .dock-item {
   box-shadow: 
     0 18px 36px rgba(0, 0, 0, 0.3),
-    0 10px 20px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .dock-item:hover + .dock-item + .dock-item {
   box-shadow: 
     0 14px 28px rgba(0, 0, 0, 0.25),
-    0 8px 16px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
 /* Enhanced icon scaling for neighboring items */
@@ -223,66 +211,41 @@ body {
 
 .dock-item:hover + .dock-item .icon img {
   transform: scale(1.08) rotateY(1deg);
-  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.6));
   transition-delay: 0.03s;
   transition-duration: 0.4s;
 }
 
 .dock-item:hover + .dock-item + .dock-item .icon img {
   transform: scale(1.04) rotateY(0.5deg);
-  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
   transition-delay: 0.06s;
   transition-duration: 0.35s;
 }
 
-/* Enhanced inner glow for neighboring items */
-.dock-item:hover + .dock-item .inner-glow {
-  opacity: 0.7;
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(255, 255, 255, 0.25) 0%,
-    rgba(255, 255, 255, 0.12) 40%,
-    transparent 70%
-  );
-  transition-delay: 0.03s;
-  transition-duration: 0.4s;
-}
+/* Neighboring items inner glow effects removed */
 
-.dock-item:hover + .dock-item + .dock-item .inner-glow {
-  opacity: 0.5;
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(255, 255, 255, 0.2) 0%,
-    rgba(255, 255, 255, 0.08) 40%,
-    transparent 70%
-  );
-  transition-delay: 0.06s;
-  transition-duration: 0.35s;
-}
-
-/* SVG-based speech bubble using background image */
+/* Simple black label without bubble or pointer */
 .dock-item::after {
   content: attr(data-label);
   position: absolute;
   bottom: calc(100% + 2rem);
   left: 50%;
   transform: translateX(-50%) translateY(1.5rem) scale(0.7) rotateX(-15deg);
-  background: url('./assets/shape.svg') no-repeat center center;
-  background-size: contain;
-  color: #333;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
   padding: 0.6rem 1.2rem;
+  border-radius: 0.6rem;
   font-size: 0.875rem;
   font-weight: 500;
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 12px 24px rgba(0, 0, 0, 0.4),
+    0 6px 12px rgba(0, 0, 0, 0.2);
   will-change: transform, opacity;
-  width: 60px;
-  height: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .dock-item:hover::after {
@@ -298,33 +261,7 @@ body {
   filter: contrast(1.1);
 }
 
-/* Enhanced inner glow effect with smooth tweening - using a different pseudo-element */
-.dock-item .inner-glow {
-  content: '';
-  position: absolute;
-  inset: 2px;
-  border-radius: 0.8rem;
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(255, 255, 255, 0.25) 0%,
-    rgba(255, 255, 255, 0.1) 40%,
-    transparent 70%
-  );
-  opacity: 0;
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  pointer-events: none;
-  will-change: opacity, background;
-}
-
-.dock-item:hover .inner-glow {
-  opacity: 1;
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(255, 255, 255, 0.35) 0%,
-    rgba(255, 255, 255, 0.15) 40%,
-    transparent 70%
-  );
-}
+/* Inner glow effect removed */
 
 /* Enhanced dock container hover effect */
 .dock:hover {
