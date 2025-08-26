@@ -260,16 +260,17 @@ body {
   transition-duration: 0.35s;
 }
 
-/* Working speech bubble using polygon clip-path */
+/* SVG-based speech bubble using background image */
 .dock-item::after {
   content: attr(data-label);
   position: absolute;
   bottom: calc(100% + 2rem);
   left: 50%;
   transform: translateX(-50%) translateY(1.5rem) scale(0.7) rotateX(-15deg);
-  background: #f0f0f0;
+  background: url('./assets/shape.svg') no-repeat center center;
+  background-size: contain;
   color: #333;
-  padding: 0.6rem 1.2rem 1.5rem 1.2rem;
+  padding: 0.6rem 1.2rem;
   font-size: 0.875rem;
   font-weight: 500;
   white-space: nowrap;
@@ -277,19 +278,11 @@ body {
   pointer-events: none;
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   will-change: transform, opacity;
-  
-  /* Working speech bubble shape with pointer */
-  clip-path: polygon(
-    0% 0%,
-    100% 0%,
-    100% 70%,
-    70% 70%,
-    60% 85%,
-    50% 100%,
-    40% 85%,
-    30% 70%,
-    0% 70%
-  );
+  width: 60px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .dock-item:hover::after {
