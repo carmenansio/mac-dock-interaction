@@ -2,6 +2,29 @@
 
 This spec provides a comprehensive blueprint for the sophisticated CSS Mac Dock micro-interaction, with detailed motion specifications, component structure, and implementation guidance for designers and developers.
 
+## Motion Design Philosophy
+
+### 🎨 **Design-to-Code Harmony**
+This implementation bridges the gap between design intent and technical execution, ensuring that every animation feels natural and responsive. The motion design follows Apple's principles of:
+
+- **Smooth Transitions**: Natural easing curves that feel organic
+- **Responsive Feedback**: Immediate response to user interactions
+- **Visual Hierarchy**: Clear distinction between hover, active, and idle states
+- **Performance**: Hardware-accelerated animations for smooth 60fps motion
+
+### 🚀 **Easing Strategy**
+- **Hover Effects**: `cubic-bezier(0.25,0.46,0.45,0.94)` - Natural deceleration
+- **Bounce Animation**: `cubic-bezier(0.25,0.46,0.45,0.94)` - Smooth, controlled bounce
+- **Neighbor Cascade**: `cubic-bezier(0.34,1.56,0.64,1)` - Bouncy, playful neighbors
+- **Label Animations**: `cubic-bezier(0.34,1.56,0.64,1)` - Smooth scale and rotation
+
+### 🎯 **Motion Tokens**
+The system uses consistent motion tokens that can be easily mapped to Figma prototypes:
+- **Duration**: 300ms (hover), 800ms (bounce), 400ms (staggered)
+- **Easing**: Natural curves for smooth, professional feel
+- **Scale**: Consistent 1.1x hover, 1.0x active for visual clarity
+- **Position**: Precise vertical movements for authentic bounce physics
+
 ## Design-to-Dev Spec: Mac Dock Micro-Interaction
 
 ### 1. Interaction Summary (TL;DR)
@@ -17,36 +40,37 @@ A Mac-style dock with 5 icon items that features:
 
 | Origin | Trigger | Destination | Notes |
 |--------|---------|-------------|-------|
-| Idle | Hover In | Hovered | Primary item scales 1.1x, lifts -1.4rem |
+| Idle | Hover In | Hovered | Primary item scales 1.1x, lifts -2rem |
 | Idle | Hover In | Neighbor 1 | Scales 1.15x, lifts -0.7rem, 3ms delay |
 | Idle | Hover In | Neighbor 2 | Scales 1.08x, lifts -0.4rem, 6ms delay |
 | Idle | Hover In | Neighbor 3 | Scales 1.04x, lifts -0.2rem, 9ms delay |
 | Idle | Hover In | Neighbor 4 | Scales 1.02x, lifts -0.1rem, 12ms delay |
 | Hovered | Hover Out | Idle | Restores to original state |
-| Hovered | Click | Active | Scales 1.05x, lifts -0.5rem, shows indicator dot |
-| Active | Timeout | Idle | Auto-resets after 2 seconds |
-| Active | Click Other | New Active | Switches active state to new item |
+| Hovered | Click | Active | Returns to default size, then bounces with 2 jumps |
+| Active | Click Other | New Active | Switches active state to new item (permanent) |
 
 ### 3. Motion Spec
 
 | Property | From → To | Duration | Delay | Easing | Notes |
 |----------|-----------|----------|-------|---------|-------|
-| Transform (Primary) | scale(1) → scale(1.1) | 400ms | 0ms | cubic-bezier(0.34,1.56,0.64,1) | Hover in |
-| Transform (Primary) | translateY(0) → translateY(-1.4rem) | 400ms | 0ms | cubic-bezier(0.34,1.56,0.64,1) | Hover in |
-| Transform (Primary) | rotateX(0°) → rotateX(6°) | 400ms | 0ms | cubic-bezier(0.34,1.56,0.64,1) | Hover in |
+| Transform (Hover) | scale(1) → scale(1.1) | 300ms | 0ms | cubic-bezier(0.25,0.46,0.45,0.94) | Hover in |
+| Transform (Hover) | translateY(0) → translateY(-2rem) | 300ms | 0ms | cubic-bezier(0.25,0.46,0.45,0.94) | Hover in |
+| Transform (Hover) | rotateX(0°) → rotateX(6°) | 300ms | 0ms | cubic-bezier(0.25,0.46,0.45,0.94) | Hover in |
 | Transform (Neighbor 1) | scale(1) → scale(1.15) | 400ms | 3ms | cubic-bezier(0.34,1.56,0.64,1) | Staggered |
 | Transform (Neighbor 2) | scale(1) → scale(1.08) | 350ms | 6ms | cubic-bezier(0.34,1.56,0.64,1) | Staggered |
 | Transform (Neighbor 3) | scale(1) → scale(1.04) | 300ms | 9ms | cubic-bezier(0.34,1.56,0.64,1) | Staggered |
 | Transform (Neighbor 4) | scale(1) → scale(1.02) | 250ms | 12ms | cubic-bezier(0.34,1.56,0.64,1) | Staggered |
 | Opacity (Label) | 0 → 1 | 400ms | 0ms | cubic-bezier(0.34,1.56,0.64,1) | Label reveal |
 | Transform (Label) | scale(0.7) → scale(1) | 400ms | 0ms | cubic-bezier(0.34,1.56,0.64,1) | Label scale |
-| Transform (Label) | translateY(1.5rem) → translateY(0) | 400ms | 0ms | cubic-bezier(0.34,1.56,0.64,1) | Label lift |
+| Transform (Label) | translateY(1.5rem) → translateY(0) | 400ms | 0ms | cubic-bezier(0.34,1.56,0.64,1) | Label rotation |
 | Transform (Label) | rotateX(-15°) → rotateX(0°) | 400ms | 0ms | cubic-bezier(0.34,1.56,0.64,1) | Label rotation |
 | Box Shadow | Default → Enhanced | 400ms | 0ms | cubic-bezier(0.34,1.56,0.64,1) | Shadow depth |
-| Transform (Active) | scale(1) → scale(1.05) | 200ms | 0ms | cubic-bezier(0.25,0.46,0.45,0.94) | Click activation |
-| Transform (Active) | translateY(0) → translateY(-0.5rem) | 200ms | 0ms | cubic-bezier(0.25,0.46,0.45,0.94) | Active lift |
-| Transform (Active) | rotateX(0°) → rotateX(2°) | 200ms | 0ms | cubic-bezier(0.25,0.46,0.45,0.94) | Active rotation |
-| Opacity (Indicator) | 0 → 1 | 200ms | 0ms | cubic-bezier(0.25,0.46,0.45,0.94) | Dot reveal |
+| **Bounce Animation** | **2 Clean Jumps** | **800ms** | **0ms** | **cubic-bezier(0.25,0.46,0.45,0.94)** | **Click activation** |
+| Transform (Bounce 1) | translateY(0) → translateY(-2.6rem) | 800ms | 0ms | cubic-bezier(0.25,0.46,0.45,0.94) | First jump |
+| Transform (Bounce 2) | translateY(-1.6rem) → translateY(-2.2rem) | 800ms | 0ms | cubic-bezier(0.25,0.46,0.45,0.94) | Second jump |
+| Transform (Final) | translateY(-2.2rem) → translateY(-1.2rem) | 800ms | 0ms | cubic-bezier(0.25,0.46,0.45,0.94) | Settle |
+| Opacity (Dot) | 0 → 1 | 800ms | 0ms | cubic-bezier(0.25,0.46,0.45,0.94) | Dot appear |
+| Transform (Dot) | scale(0) → scale(1) | 800ms | 0ms | cubic-bezier(0.25,0.46,0.45,0.94) | Dot scale |
 
 ### 4. Component Structure
 
@@ -58,24 +82,25 @@ Dock Container
 │   └── Dock Border
 ├── Dock Item 1 (Firefox)
 │   ├── Icon Container
-│   ├── Label (::after)
-│   └── Active Indicator (::after when active)
+│   └── Label (::after)
 ├── Dock Item 2 (ChatGPT)
 │   ├── Icon Container
-│   ├── Label (::after)
-│   └── Active Indicator (::after when active)
+│   └── Label (::after)
 ├── Dock Item 3 (System Preferences)
 │   ├── Icon Container
-│   ├── Label (::after)
-│   └── Active Indicator (::after when active)
+│   └── Label (::after)
 ├── Dock Item 4 (Trello)
 │   ├── Icon Container
-│   ├── Label (::after)
-│   └── Active Indicator (::after when active)
-└── Dock Item 5 (VS Code)
-    ├── Icon Container
-    ├── Label (::after)
-    └── Active Indicator (::after when active)
+│   └── Label (::after)
+├── Dock Item 5 (VS Code)
+│   ├── Icon Container
+│   └── Label (::after)
+└── Active Dots (Independent Layer)
+    ├── Dot 1 (Firefox) - left: 11%
+    ├── Dot 2 (ChatGPT) - left: 30.5%
+    ├── Dot 3 (System Preferences) - left: 50%
+    ├── Dot 4 (Trello) - left: 69%
+    └── Dot 5 (VS Code) - left: 89%
 ```
 
 #### Naming Convention
@@ -110,7 +135,22 @@ Dock Container
 - **Easing**: Custom cubic-bezier(0.34,1.56,0.64,1)
 - **Stagger**: 3ms increments for neighboring items
 
-### 6. Tokens (Design System)
+### 6. Bounce Animation Details
+
+#### Bounce Sequence (800ms)
+1. **Start (0%)**: `translateY(0) scale(1.0) rotateX(0deg)` - Default position
+2. **First Jump (25%)**: `translateY(-2.6rem) scale(1.0) rotateX(7.5deg)` - Highest point
+3. **Bounce Down (50%)**: `translateY(-1.6rem) scale(1.0) rotateX(7deg)` - Middle position
+4. **Second Jump (75%)**: `translateY(-2.2rem) scale(1.0) rotateX(7.5deg)` - Second peak
+5. **Final Settle (100%)**: `translateY(-1.2rem) scale(1.0) rotateX(0deg)` - Active position
+
+#### Dot Animation (Independent)
+- **Position**: Fixed below dock at `bottom: 0.4rem`
+- **Timing**: 800ms synchronized with bounce
+- **Effect**: Scale from 0 to 1 with smooth appear
+- **No Movement**: Stays at fixed position during bounce
+
+### 7. Tokens (Design System)
 
 | Token | Usage | Base Value | Notes |
 |-------|-------|------------|-------|
@@ -119,23 +159,27 @@ Dock Container
 | --duration-stagger-2 | Second neighbor | 350ms | 6ms delay |
 | --duration-stagger-3 | Third neighbor | 300ms | 9ms delay |
 | --duration-stagger-4 | Fourth neighbor | 250ms | 12ms delay |
-| --ease-bounce | Primary easing | cubic-bezier(0.34,1.56,0.64,1) | Map to Figma Custom |
+| --ease-hover | Hover easing | cubic-bezier(0.25,0.46,0.45,0.94) | Smooth, natural |
+| --ease-bounce | Bounce easing | cubic-bezier(0.25,0.46,0.45,0.94) | Smooth bounce |
+| --ease-stagger | Stagger easing | cubic-bezier(0.34,1.56,0.64,1) | Bouncy neighbors |
 | --scale-hover | Hover scale | 1.1 | ± 0.1 tolerance |
 | --scale-neighbor-1 | First neighbor scale | 1.15 | ± 0.05 tolerance |
 | --scale-neighbor-2 | Second neighbor scale | 1.08 | ± 0.05 tolerance |
 | --scale-neighbor-3 | Third neighbor scale | 1.04 | ± 0.05 tolerance |
 | --scale-neighbor-4 | Fourth neighbor scale | 1.02 | ± 0.05 tolerance |
-| --scale-active | Active scale | 1.05 | ± 0.05 tolerance |
-| --lift-hover | Hover lift | -1.4rem | ± 0.1rem tolerance |
-| --lift-active | Active lift | -0.5rem | ± 0.1rem tolerance |
+| --scale-active | Active scale | 1.0 | ± 0.05 tolerance |
+| --lift-hover | Hover lift | -2rem | ± 0.1rem tolerance |
+| --lift-bounce-1 | First bounce | -2.6rem | ± 0.1rem tolerance |
+| --lift-bounce-2 | Second bounce | -2.2rem | ± 0.1rem tolerance |
+| --lift-final | Final position | -1.2rem | ± 0.1rem tolerance |
 | --rotation-hover | Hover rotation | 6deg | ± 1deg tolerance |
-| --rotation-active | Active rotation | 2deg | ± 1deg tolerance |
-| --duration-active | Active state timing | 600ms | ± 50ms tolerance |
+| --duration-hover | Hover timing | 300ms | ± 25ms tolerance |
+| --duration-bounce | Bounce timing | 800ms | ± 50ms tolerance |
 | --blur-backdrop | Dock backdrop | 20px | ± 2px tolerance |
 | --radius-dock | Dock corners | 2rem | ± 0.1rem tolerance |
 | --radius-item | Item corners | 1rem | ± 0.05rem tolerance |
 
-### 7. Accessibility (A11y)
+### 8. Accessibility (A11y)
 
 #### Focus States
 - **Focus visible**: 2px white outline with 3px offset
@@ -152,7 +196,7 @@ Dock Container
 - **Label contrast**: Black background (rgba(0,0,0,0.85)) on white text
 - **Focus indicator**: High contrast white outline
 
-### 8. Platform Notes
+### 9. Platform Notes
 
 #### Web Implementation
 - **CSS Transitions**: Primary animation method
@@ -171,7 +215,7 @@ Dock Container
 - **Touch**: Active states optimized for touch interaction
 - **Breakpoint**: 768px for mobile adjustments
 
-### 9. QA Checklist
+### 10. QA Checklist
 
 #### Edge Cases
 - [ ] Hover out during animation (should complete gracefully)
@@ -198,7 +242,31 @@ Dock Container
 - [ ] Click activates new item smoothly
 - [ ] Active state transitions properly between items
 
-### 10. Handoff Pack
+### 12. Current Implementation Status
+
+#### ✅ **Completed Features**
+- **Hover Effects**: Smooth scale (1.1x) and lift (-2rem) with 300ms timing
+- **Neighbor Cascade**: Staggered animations with 3ms delays
+- **Label System**: Black tooltips with scale and rotation animations
+- **Bounce Animation**: 2-jump sequence with 800ms duration
+- **Active State**: Permanent activation with independent dot indicators
+- **Dot System**: Fixed positioning below dock (11%, 30.5%, 50%, 69%, 89%)
+- **Smooth Transitions**: Natural easing with `cubic-bezier(0.25,0.46,0.45,0.94)`
+
+#### 🎯 **Key Improvements Made**
+- **Independent Dot Animation**: Dots no longer bounce with icons
+- **Smooth Hover Transitions**: Reduced from 400ms to 300ms for responsiveness
+- **Authentic Bounce Physics**: 2 clean jumps with realistic vertical movement
+- **Clean State Management**: Hover effects disabled during active state
+- **Performance Optimized**: Hardware acceleration with `will-change` properties
+
+#### 🔧 **Technical Implementation**
+- **CSS Animations**: Keyframe-based bounce sequences
+- **JavaScript State Management**: Click handling with permanent active states
+- **Responsive Design**: Mobile-optimized with touch interactions
+- **Accessibility**: Focus states and reduced motion support
+
+### 13. Handoff Pack
 
 #### Exports
 **Frames**:
